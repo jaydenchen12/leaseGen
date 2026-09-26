@@ -1,0 +1,127 @@
+.lease {
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 10.5pt;
+  line-height: 1.45;
+  color: #111;
+  counter-reset: sec;
+}
+.lease h1 {
+  font-size: 15pt;
+  text-align: center;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin: 0 0 4pt;
+}
+.lease .subtitle {
+  text-align: center;
+  margin: 0 0 14pt;
+}
+.lease h2 {
+  font-size: 10.5pt;
+  text-transform: uppercase;
+  margin: 12pt 0 4pt;
+  break-after: avoid;
+}
+.lease h2::before {
+  counter-increment: sec;
+  content: counter(sec) ". ";
+}
+.lease h3 {
+  font-size: 10.5pt;
+  margin: 12pt 0 4pt;
+  break-after: avoid;
+}
+.lease p {
+  margin: 0 0 6pt;
+  text-align: justify;
+}
+.lease ol.sub {
+  list-style: none;
+  counter-reset: item;
+  margin: 0 0 6pt;
+  padding: 0;
+}
+.lease ol.sub li {
+  counter-increment: item;
+  margin: 0 0 4pt 22pt;
+  text-indent: -22pt;
+  text-align: justify;
+}
+.lease ol.sub li::before {
+  content: "(" counter(item, lower-alpha) ") ";
+}
+.lease ol.num {
+  margin: 0 0 6pt;
+  padding-left: 22pt;
+}
+.lease ol.num li {
+  margin: 0 0 4pt;
+  text-align: justify;
+}
+.lease table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 0 0 12pt;
+  font-size: 10pt;
+}
+.lease th,
+.lease td {
+  border: 1px solid #888;
+  padding: 3pt 6pt;
+  text-align: left;
+  vertical-align: top;
+}
+.lease th {
+  width: 32%;
+  font-weight: bold;
+  background: #f2f2f2;
+}
+.lease .box {
+  border: 1px solid #000;
+  padding: 6pt 8pt;
+  margin: 6pt 0 8pt;
+}
+.lease .cb {
+  display: inline-block;
+  width: 9pt;
+  height: 9pt;
+  border: 1px solid #000;
+  margin-right: 5pt;
+  vertical-align: -1pt;
+  text-align: center;
+  font: bold 8pt/9pt Arial, Helvetica, sans-serif;
+}
+.lease .cb.on::before {
+  content: "X";
+}
+.lease .page-break {
+  break-before: page;
+}
+.lease .signatures {
+  break-inside: avoid;
+  margin-top: 14pt;
+}
+.lease .sig-row {
+  display: flex;
+  gap: 24pt;
+  margin-top: 8pt;
+  break-inside: avoid;
+}
+.lease .sig-name {
+  flex: 3;
+}
+.lease .sig-date {
+  flex: 1;
+}
+.lease .sig-space {
+  height: 30pt;
+}
+.lease .sig-label {
+  border-top: 1px solid #000;
+  padding-top: 3pt;
+  font-size: 9pt;
+}
+.lease .anchor {
+  color: #fff;
+  font-size: 6pt;
+}

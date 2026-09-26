@@ -1,0 +1,26 @@
+{
+  "name": "leasegen",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start": "tsx server/index.ts",
+    "check": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@vitejs/plugin-react": "^6.1.1",
+    "express": "^5.2.1",
+    "pdf-lib": "^1.17.1",
+    "puppeteer": "^25.12.0",
+    "react": "^19.3.0",
+    "react-dom": "^19.3.0",
+    "tsx": "^4.23.15",
+    "vite": "^8.3.1"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.6",
+    "@types/node": "^26.6.3",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "typescript": "^7.0.2"
+  }
+}
