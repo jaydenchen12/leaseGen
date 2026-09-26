@@ -8,7 +8,7 @@ const DRAFT_KEY = 'leaseDraft';
 
 function loadDraft(): LeaseInput {
   const raw = localStorage.getItem(DRAFT_KEY);
-  return raw ? (JSON.parse(raw) as LeaseInput) : emptyLease;
+  return raw ? { ...emptyLease, ...(JSON.parse(raw) as LeaseInput) } : emptyLease;
 }
 
 function fileName(lease: LeaseInput): string {

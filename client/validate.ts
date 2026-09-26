@@ -1,5 +1,5 @@
 import type { LeaseInput } from '../shared/types';
-import { daysBetween } from '../shared/format';
+import { daysBetween, parseDate } from '../shared/format';
 
 export const STEPS = [
   'Property',
@@ -99,7 +99,18 @@ export function validate(step: Step, l: LeaseInput): string[] {
           'The Certificate of Rental Suitability must be issued within 60 days before the lease start date (Philadelphia Code § 9-3903)',
         );
       }
-      need(!blank(p.leadCertificationDate), 'Lead certification date is required');
+      need(!blank(p.leadCertificationDate), 'Lead certificate inspection date is required');
+      if (p.leadCertificationDate && l.term.start) {
+        need(daysBetween(p.leadCertificationDate, l.term.start) >= 0, 'Lead certificate inspection date cannot be after the lease start date');
+        if (p.leadCertification === 'Lead-Safe') {
+          const inspected = parseDate(p.leadCertificationDate);
+          const expires = new Date(inspected.getFullYear() + 4, inspected.getMonth(), inspected.getDate());
+          need(
+            parseDate(l.term.start) <= expires,
+            'A Lead-Safe certificate is valid for 48 months from its inspection date (Philadelphia Code § 6-802(15)); this one expires before the lease starts',
+          );
+        }
+      }
       if (p.bedBugsReported) need(!blank(p.bedBugDetails), 'Describe the bed bug history and remediation');
       break;
     }

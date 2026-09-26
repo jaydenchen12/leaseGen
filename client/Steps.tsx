@@ -320,6 +320,18 @@ function Policies({ lease, set }: Props) {
           onChange={(smoking) => set({ smoking })}
         />
       </Field>
+      <Field label="Building smoking policy" hint="Philadelphia requires landlords of buildings with 3 or more units to disclose the building policy.">
+        <Radio
+          name="buildingSmokingPolicy"
+          value={lease.buildingSmokingPolicy}
+          options={[
+            ['prohibitedInAllUnits', 'Smoking prohibited in all dwelling units'],
+            ['allowedInAllUnits', 'Smoking allowed in all dwelling units'],
+            ['allowedInSomeUnits', 'Smoking allowed in some dwelling units'],
+          ]}
+          onChange={(buildingSmokingPolicy) => set({ buildingSmokingPolicy })}
+        />
+      </Field>
       <Check
         checked={lease.rentersInsuranceRequired}
         onChange={(rentersInsuranceRequired) => set({ rentersInsuranceRequired })}
@@ -351,7 +363,7 @@ function Philadelphia({ lease, set }: Props) {
           onChange={(leadCertification) => up({ leadCertification })}
         />
       </Field>
-      <Field label="Lead certificate date">
+      <Field label="Lead certificate inspection date" hint="Lead-Safe certificates are valid for 48 months from the inspection. Lead-Free certificates do not expire.">
         <Text type="date" value={p.leadCertificationDate} onChange={(leadCertificationDate) => up({ leadCertificationDate })} />
       </Field>
       <Check
@@ -402,9 +414,9 @@ function Review({ lease }: Props) {
         </tbody>
       </table>
       <p className="hint">
-        The PDF includes the lease, the disclosures page, and the EPA lead pamphlet. Upload it to your signing platform
-        and add the Certificate of Rental Suitability, the Partners for Good Housing handbook, and the lead certificate
-        to the same envelope.
+        The PDF includes the lease, the disclosures page, the EPA lead pamphlet, the City bed bug notice, and the
+        Partners in Good Housing handbook. Upload it to your signing platform and add the Certificate of Rental
+        Suitability and the lead certificate (with a tenant signature field on the certificate) to the same envelope.
       </p>
     </>
   );

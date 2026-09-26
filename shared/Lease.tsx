@@ -179,9 +179,10 @@ export function Lease({ input }: { input: LeaseInput }) {
             termination at least 30 days before the End Date, this Lease continues after the End Date on a
             month-to-month basis on the same terms. During a month-to-month tenancy, Landlord may change the Monthly
             Rent or other terms by giving Tenant at least 30 days' written notice, and either party may end the tenancy
-            by giving the other at least 30 days' written notice, effective on the last day of a rental month. Landlord
-            will comply with any good-cause requirements of the Philadelphia Code that apply to a termination or
-            non-renewal.
+            by giving the other at least 30 days' written notice, effective on the last day of a rental month. A
+            month-to-month tenancy is a lease of less than one year under Philadelphia Code Chapter 9-800, so any
+            notice from Landlord ending or not renewing it will state the good cause for it, will be given at least 30
+            days in advance, and will be hand delivered or sent by first-class mail with proof of mailing.
           </p>
         ) : (
           <p>
@@ -190,7 +191,9 @@ export function Lease({ input }: { input: LeaseInput }) {
             Landlord's written consent, Tenant is a holdover tenant: Tenant owes rent for each day of holdover at a
             daily rate equal to one-thirtieth of the Monthly Rent, Landlord may recover possession under Pennsylvania
             law, and Landlord's acceptance of any holdover payment does not renew this Lease or waive Landlord's
-            rights. Landlord will comply with any good-cause requirements of the Philadelphia Code that apply.
+            rights. If the Term is less than one year, Philadelphia Code Chapter 9-800 requires Landlord to give at
+            least 30 days' written notice stating good cause in order not to renew this Lease, and without that notice
+            this Lease continues month to month.
           </p>
         )}
       </Sec>
@@ -386,6 +389,13 @@ export function Lease({ input }: { input: LeaseInput }) {
             repairing any smoke-related damage beyond normal wear and tear when the tenancy ends.
           </p>
         )}
+        <p>
+          Building smoking policy, disclosed as the Philadelphia Code requires: smoking is{' '}
+          {input.buildingSmokingPolicy === 'prohibitedInAllUnits' && 'prohibited in all dwelling units'}
+          {input.buildingSmokingPolicy === 'allowedInAllUnits' && 'allowed in all dwelling units'}
+          {input.buildingSmokingPolicy === 'allowedInSomeUnits' && 'allowed in some dwelling units'} of the building
+          that contains the Premises.
+        </p>
       </Sec>
 
       <Sec title="Condition of Premises">
@@ -453,7 +463,7 @@ export function Lease({ input }: { input: LeaseInput }) {
       <Sec title="Landlord's Access">
         <p>
           Landlord and Landlord's agents and contractors may enter the Premises at reasonable times after giving Tenant
-          at least 24 hours' notice (by text message, email, or writing) to inspect, make repairs or improvements, show
+          at least 24 hours' written notice (including by email or text message) to inspect, make repairs or improvements, show
           the Premises to prospective tenants, buyers, lenders, insurers, or inspectors, or for any other lawful purpose.
           No notice is required in an emergency, when Tenant has requested a repair, or when Landlord reasonably believes
           the Premises has been abandoned. During the last 60 days of the Term, Landlord may show the Premises to
@@ -521,7 +531,7 @@ export function Lease({ input }: { input: LeaseInput }) {
           <li>
             Before filing an eviction complaint in a case to which it applies, Landlord will comply with the Philadelphia
             Eviction Diversion Program (Philadelphia Code Chapter 9-800), including giving Tenant the required Notice of
-            Diversion Rights and participating in the program for the required period.
+            Rights for Tenants at least 30 days before filing and applying to the program.
           </li>
           <li>
             After a default, Landlord may recover all unpaid rent and charges through the end of the Term, less any rent
@@ -549,11 +559,14 @@ export function Lease({ input }: { input: LeaseInput }) {
           </li>
           <li>
             Personal property that Tenant leaves in the Premises after the tenancy ends will be handled under 68 P.S.
-            § 250.505a. Landlord will send written notice to Tenant's forwarding address (or, if none was given, to the
-            Premises and any other address Landlord has for Tenant). Tenant will have 10 days from the postmark date of
-            that notice to retrieve the property, or 30 days if within those 10 days Tenant notifies Landlord in writing
-            that Tenant intends to retrieve it. After that period, Landlord may dispose of the property as the statute
-            allows. Tenant is responsible for the costs of removal and storage.
+            § 250.505a. Landlord will send written notice of Tenant's rights by first-class mail to the Premises and to
+            any forwarding address Tenant has provided. Tenant will have 10 days from the postmark date of that notice
+            to retrieve the property or to ask Landlord to store it; if Tenant asks, Landlord will store the property
+            for up to 30 days from the date of the notice at a place of Landlord's choosing, at Tenant's cost. After
+            that period, Landlord may dispose of the property as the statute allows. Personal property is deemed
+            abandoned in the circumstances the statute describes, including when Tenant has vacated without
+            communicating an intent to return, rent is more than 15 days past due, and Landlord has posted notice of
+            Tenant's rights regarding the property.
           </li>
         </ol>
       </Sec>
@@ -596,23 +609,33 @@ export function Lease({ input }: { input: LeaseInput }) {
           <li>
             Certificate of Rental Suitability. Landlord has given Tenant a Certificate of Rental Suitability for the
             Premises issued by the Department of Licenses and Inspections on {longDate(PH.crsDate)}, together with the
-            City of Philadelphia Partners for Good Housing handbook, as Philadelphia Code § 9-3903 requires. Tenant's
-            acknowledgment of receipt appears in the Disclosures and Acknowledgments that follow the signatures.
+            City of Philadelphia Partners in Good Housing handbook (Exhibit C), as Philadelphia Code § 9-3903 requires.
+            Tenant's acknowledgment of receipt appears in the Disclosures and Acknowledgments that follow the
+            signatures.
           </li>
           <li>
             Lead. The federal lead-based paint disclosure and the Philadelphia Lead Paint Disclosure and Certification
             Law disclosure (Philadelphia Code Chapter 6-800) appear in the Disclosures and Acknowledgments. The EPA
-            pamphlet "Protect Your Family From Lead in Your Home" is attached as Exhibit A.
+            pamphlet "Protect Your Family From Lead in Your Home" is attached as Exhibit A. Landlord has given Tenant a
+            copy of the {PH.leadCertification} certificate for the Premises, which Tenant is signing as Philadelphia
+            Code § 6-803 requires.
           </li>
           <li>
-            Bed Bugs. The bed bug disclosure and information required by the Philadelphia Code appear in the Disclosures
-            and Acknowledgments. Tenant will promptly report any suspected bed bugs to Landlord in writing and will
-            cooperate fully with inspection and treatment.
+            Bed Bugs. The bed bug disclosure required by Philadelphia Code Chapter 9-4800 appears in the Disclosures
+            and Acknowledgments, and the City of Philadelphia bed bug informational notice is attached as Exhibit B.
+            Landlord maintains a bed bug control plan for the property as the Code requires.
           </li>
           <li>
-            Fair Housing. Landlord complies with the federal Fair Housing Act, the Pennsylvania Human Relations Act,
-            and the Philadelphia Fair Practices Ordinance. Nothing in this Lease waives any right that Tenant has under
-            applicable law that cannot be waived.
+            Fair Housing and Tenant Protections. Landlord complies with the federal Fair Housing Act, the Pennsylvania
+            Human Relations Act, and the Philadelphia Fair Practices Ordinance. Landlord will not retaliate against
+            Tenant for exercising a legal right, and will not end this Lease or change its terms because a code
+            violation has been cited. A Tenant who is a victim of domestic violence or sexual assault has the
+            protections the Philadelphia Code provides, including the right to end this Lease early. Nothing in this
+            Lease waives any right that Tenant has under applicable law that cannot be waived.
+          </li>
+          <li>
+            Voter Registration. Information on registering to vote is available from the Philadelphia City
+            Commissioners at vote.phila.gov and in Exhibit C.
           </li>
         </ol>
       </Sec>
@@ -620,7 +643,7 @@ export function Lease({ input }: { input: LeaseInput }) {
       <Sec title="General Provisions">
         <ol className="sub">
           <li>
-            This Lease, including the Disclosures and Acknowledgments and Exhibit A, is the entire agreement between
+            This Lease, including the Disclosures and Acknowledgments and Exhibits A, B, and C, is the entire agreement between
             Landlord and Tenant. No oral statement or promise is part of this Lease. This Lease may be changed only by a
             writing signed by Landlord and Tenant.
           </li>
@@ -669,16 +692,18 @@ export function Lease({ input }: { input: LeaseInput }) {
 
       <Sec title="Attachments">
         <p>
-          The following are part of this Lease: the Disclosures and Acknowledgments that follow the signatures, and
-          Exhibit A, the EPA pamphlet "Protect Your Family From Lead in Your Home." Landlord has also given Tenant the
-          Certificate of Rental Suitability, the Partners for Good Housing handbook, and the Philadelphia{' '}
-          {PH.leadCertification} certificate for the Premises.
+          The following are part of this Lease: the Disclosures and Acknowledgments that follow the signatures;
+          Exhibit A, the EPA pamphlet "Protect Your Family From Lead in Your Home"; Exhibit B, the City of Philadelphia
+          bed bug informational notice; and Exhibit C, the City of Philadelphia Partners in Good Housing handbook.
+          Landlord has also given Tenant the Certificate of Rental Suitability and the Philadelphia{' '}
+          {PH.leadCertification} certificate for the Premises
+          {PH.leadCertification === 'Lead-Safe' ? ' with its dust wipe laboratory results' : ''}.
         </p>
       </Sec>
 
       <Signatures
         input={input}
-        lead="By signing below, Landlord and Tenant agree to every term of this Lease, including the Disclosures and Acknowledgments and Exhibit A."
+        lead="By signing below, Landlord and Tenant agree to every term of this Lease, including the Disclosures and Acknowledgments and Exhibits A, B, and C."
       />
 
       <div className="page-break">
@@ -733,50 +758,53 @@ export function Lease({ input }: { input: LeaseInput }) {
 
         <h3>Part B. Philadelphia Lead Paint Disclosure and Certification Law (Philadelphia Code Chapter 6-800)</h3>
         <p>
-          Landlord certifies that the Premises has been certified {PH.leadCertification} by a certified lead inspector,
-          that the certificate is dated {longDate(PH.leadCertificationDate)}, and that Landlord has given Tenant a copy
-          of the certificate. Landlord will provide the certificate and this acknowledgment to the Philadelphia
-          Department of Public Health as the law requires. Tenant acknowledges receipt of the {PH.leadCertification}{' '}
-          certificate.
+          Landlord certifies that the Premises has been certified {PH.leadCertification} by a certified lead inspector
+          based on an inspection on {longDate(PH.leadCertificationDate)}
+          {PH.leadCertification === 'Lead-Safe'
+            ? ', that the certificate is valid for 48 months from that inspection and is accompanied by the laboratory results of the dust wipe tests'
+            : ', and that a Lead-Free certificate does not expire'}
+          , and that Landlord has given Tenant a copy of the certificate and has provided it to the Philadelphia
+          Department of Public Health. Tenant acknowledges receipt of the {PH.leadCertification} certificate and is
+          signing a copy of it, as Philadelphia Code § 6-803(3)(a) requires.
         </p>
 
-        <h3>Part C. Certificate of Rental Suitability and Partners for Good Housing Handbook (Philadelphia Code § 9-3903)</h3>
+        <h3>Part C. Certificate of Rental Suitability and Partners in Good Housing Handbook (Philadelphia Code § 9-3903)</h3>
         <p>
           Landlord holds Philadelphia Rental License No. {L.rentalLicense} for the Premises. Tenant acknowledges that,
           with this Lease, Tenant received (1) a Certificate of Rental Suitability for the Premises issued by the
           Department of Licenses and Inspections on {longDate(PH.crsDate)}, including Landlord's attestation to the
-          suitability of the Premises, and (2) the City of Philadelphia Partners for Good Housing handbook.
+          suitability of the Premises, and (2) the City of Philadelphia Partners in Good Housing handbook, attached as
+          Exhibit C.
         </p>
 
-        <h3>Part D. Bed Bug Disclosure and Information (Philadelphia Code Chapter 9-4500)</h3>
+        <h3>Part D. Bed Bug Disclosure and Information (Philadelphia Code Chapter 9-4800)</h3>
         <p>
           <strong>Infestation history.</strong>{' '}
           {PH.bedBugsReported
-            ? `Landlord discloses the following bed bug infestation and remediation history for the Premises during the 120 days before the Start Date: ${PH.bedBugDetails}`
-            : 'Landlord has no knowledge of any bed bug infestation in, or bed bug remediation of, the Premises during the 120 days before the Start Date.'}
+            ? `Landlord discloses the following bed bug infestation and remediation history for the Premises during the 120 days before the Start Date, including any ongoing remediation: ${PH.bedBugDetails}`
+            : 'Landlord has no knowledge of any bed bug infestation in, or bed bug remediation of, the Premises during the 120 days before the Start Date, and no remediation is ongoing.'}
         </p>
         <p>
-          <strong>About bed bugs.</strong> Bed bugs are small, flat, reddish-brown insects that feed on blood, hide in
-          mattress seams, box springs, bed frames, furniture, baseboards, and wall cracks, and are most active at
-          night. Signs include itchy bites, small blood spots or dark specks on bedding, shed skins, and a sweet musty
-          odor. Bed bugs spread on used furniture, luggage, clothing, and between units. To reduce risk, inspect
-          secondhand furniture before bringing it inside, keep luggage off beds when traveling, reduce clutter, and
-          vacuum regularly.
+          <strong>Informational notice and control plan.</strong> The City of Philadelphia bed bug informational notice
+          is attached as Exhibit B, and Tenant acknowledges receiving it. Landlord maintains a bed bug control plan for
+          the property as Chapter 9-4800 requires.
         </p>
         <p>
-          <strong>Responsibilities.</strong> Tenant will notify Landlord in writing promptly, and in any event within 5
-          days, after discovering any sign of bed bugs, and will not attempt to treat the infestation with foggers or
-          other over-the-counter products. Landlord will investigate and, if bed bugs are found, arrange treatment by a
-          licensed pest control professional and any needed follow-up within the time the Philadelphia Code requires,
-          will keep records of the treatment, and will make them available as the Code requires. Tenant will cooperate
-          with every inspection and treatment, including preparing the Premises as the pest control professional
-          instructs, laundering and bagging belongings, and providing access. To the extent the Philadelphia Code
-          permits, Tenant is responsible for the cost of remediating an infestation that Tenant caused.
+          <strong>Responsibilities.</strong> Tenant will notify Landlord in writing within 5 business days after
+          finding or suspecting bed bugs, and will not attempt to treat an infestation with foggers or other
+          over-the-counter products. Landlord will acknowledge the notice within 5 business days and, within 10 business
+          days after receiving it, will hire a pest management professional to investigate and, if bed bugs are found,
+          to remediate until there is no longer evidence of bed bugs, with follow-up monitoring for the next 12 months,
+          all as Chapter 9-4800 requires. Tenant will give access for every inspection and treatment and will prepare
+          the Premises as the pest management professional instructs, including laundering and bagging belongings.
+          Landlord will pay the full cost of remediation when Tenant reports the bed bugs within the first year of the
+          tenancy or within 180 days after bed bugs are found in an adjacent unit; in all other cases the cost is
+          shared between Landlord and Tenant as Chapter 9-4800 provides.
         </p>
 
         <Signatures
           input={input}
-          lead="The parties have reviewed the information above and certify, to the best of their knowledge, that the information they have provided is true and accurate. Tenant acknowledges receipt of the documents described in Parts A through D."
+          lead="The parties have reviewed the information above and certify, to the best of their knowledge, that the information they have provided is true and accurate. Tenant acknowledges receipt of the documents described in Parts A through D, including Exhibits A, B, and C."
         />
       </div>
     </div>

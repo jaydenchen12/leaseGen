@@ -26,6 +26,7 @@ export type Payer = 'landlord' | 'tenant';
 
 export type EndOfTerm = 'monthToMonth' | 'vacate';
 export type Smoking = 'prohibited' | 'outdoorsOnly' | 'allowed';
+export type BuildingSmokingPolicy = 'prohibitedInAllUnits' | 'allowedInAllUnits' | 'allowedInSomeUnits';
 export type LeadCertification = 'Lead-Safe' | 'Lead-Free';
 
 export type LeaseInput = {
@@ -48,6 +49,7 @@ export type LeaseInput = {
   utilities: Record<Utility, Payer>;
   pets: { allowed: boolean; description: string; deposit: number; monthlyRent: number };
   smoking: Smoking;
+  buildingSmokingPolicy: BuildingSmokingPolicy;
   rentersInsuranceRequired: boolean;
   philadelphia: {
     crsDate: string;
@@ -88,6 +90,7 @@ export const emptyLease: LeaseInput = {
   },
   pets: { allowed: false, description: '', deposit: 0, monthlyRent: 0 },
   smoking: 'prohibited',
+  buildingSmokingPolicy: 'prohibitedInAllUnits',
   rentersInsuranceRequired: true,
   philadelphia: {
     crsDate: '',

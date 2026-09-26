@@ -6,7 +6,11 @@ import { Lease, premisesAddress } from '../shared/Lease';
 import type { LeaseInput } from '../shared/types';
 
 const css = await readFile(new URL('../shared/lease.css', import.meta.url), 'utf8');
-const pamphlet = await readFile(new URL('../assets/protect-your-family-from-lead.pdf', import.meta.url));
+const exhibits = await Promise.all(
+  ['protect-your-family-from-lead.pdf', 'philadelphia-bed-bug-notice.pdf', 'partners-in-good-housing.pdf'].map((name) =>
+    readFile(new URL(`../assets/${name}`, import.meta.url)),
+  ),
+);
 
 function escapeHtml(s: string): string {
   return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
@@ -38,8 +42,10 @@ async function renderLease(input: LeaseInput): Promise<Uint8Array> {
 
 export async function leasePacket(input: LeaseInput): Promise<Uint8Array> {
   const packet = await PDFDocument.load(await renderLease(input));
-  const epa = await PDFDocument.load(pamphlet);
-  for (const page of await packet.copyPages(epa, epa.getPageIndices())) packet.addPage(page);
+  for (const bytes of exhibits) {
+    const exhibit = await PDFDocument.load(bytes);
+    for (const page of await packet.copyPages(exhibit, exhibit.getPageIndices())) packet.addPage(page);
+  }
   packet.setTitle(`Residential Lease Agreement, ${premisesAddress(input)}`);
   return packet.save();
 }
