@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { emptyLease, type LeaseInput } from '../shared/types';
 import { Lease, premisesAddress } from '../shared/Lease';
 import { StepForm } from './Steps';
-import { STEPS, validate, validateAll } from './validate';
+import { STEPS, stepLabel, validate, validateAll } from './validate';
 
 const DRAFT_KEY = 'leaseDraft';
 
@@ -73,18 +73,18 @@ export function App() {
     <div className="app">
       <aside className="form">
         <header>
-          <h1>Philadelphia Lease Generator</h1>
+          <h1>Lease Generator</h1>
           <button onClick={newLease}>New lease</button>
         </header>
         <nav>
           {STEPS.map((s, i) => (
             <button key={s} className={i === step ? 'active' : ''} onClick={() => go(i)}>
-              {i + 1}. {s}
+              {i + 1}. {stepLabel(s, lease)}
             </button>
           ))}
         </nav>
         <section className="step">
-          <h2>{current}</h2>
+          <h2>{stepLabel(current, lease)}</h2>
           <StepForm step={current} lease={lease} set={set} />
         </section>
         {errors.length > 0 && (

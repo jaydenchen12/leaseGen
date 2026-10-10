@@ -1,3 +1,6 @@
+export const CITIES = ['philadelphia'] as const;
+export type CityKey = (typeof CITIES)[number];
+
 export type Landlord = {
   name: string;
   street: string;
@@ -30,6 +33,7 @@ export type BuildingSmokingPolicy = 'prohibitedInAllUnits' | 'allowedInAllUnits'
 export type LeadCertification = 'Lead-Safe' | 'Lead-Free';
 
 export type LeaseInput = {
+  city: CityKey;
   property: {
     street: string;
     unit: string;
@@ -62,6 +66,7 @@ export type LeaseInput = {
 };
 
 export const emptyLease: LeaseInput = {
+  city: 'philadelphia',
   property: {
     street: '',
     unit: '',

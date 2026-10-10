@@ -1,67 +1,24 @@
-import type { ReactNode } from 'react';
-import { UTILITIES, type LeaseInput, type Tenant } from '../shared/types';
+import { CITIES, type Tenant, UTILITIES } from '../shared/types';
 import { money, proratedRent } from '../shared/format';
+import { cities } from '../shared/cities';
+import type { StepProps as Props } from '../shared/cities/types';
+import { Area, Check, Field, Num, Radio, Text } from '../shared/fields';
 import type { Step } from './validate';
-
-type Props = { lease: LeaseInput; set: (patch: Partial<LeaseInput>) => void };
-
-function Field({ label, hint, children }: { label: string; hint?: string; children: ReactNode }) {
-  return (
-    <label className="field">
-      <span className="label">{label}</span>
-      {children}
-      {hint && <span className="hint">{hint}</span>}
-    </label>
-  );
-}
-
-function Text({ value, onChange, type = 'text' }: { value: string; onChange: (v: string) => void; type?: string }) {
-  return <input type={type} value={value} onChange={(e) => onChange(e.target.value)} />;
-}
-
-function Num({ value, onChange, step = 1 }: { value: number; onChange: (v: number) => void; step?: number }) {
-  return <input type="number" value={value} step={step} onChange={(e) => onChange(Number(e.target.value))} />;
-}
-
-function Area({ value, onChange }: { value: string; onChange: (v: string) => void }) {
-  return <textarea value={value} onChange={(e) => onChange(e.target.value)} />;
-}
-
-function Check({ checked, onChange, label }: { checked: boolean; onChange: (v: boolean) => void; label: string }) {
-  return (
-    <label className="check">
-      <input type="checkbox" checked={checked} onChange={(e) => onChange(e.target.checked)} /> {label}
-    </label>
-  );
-}
-
-function Radio<T extends string>({
-  name,
-  value,
-  options,
-  onChange,
-}: {
-  name: string;
-  value: T;
-  options: [T, string][];
-  onChange: (v: T) => void;
-}) {
-  return (
-    <div className="radios">
-      {options.map(([v, label]) => (
-        <label key={v}>
-          <input type="radio" name={name} checked={value === v} onChange={() => onChange(v)} /> {label}
-        </label>
-      ))}
-    </div>
-  );
-}
 
 function Property({ lease, set }: Props) {
   const p = lease.property;
   const up = (patch: Partial<typeof p>) => set({ property: { ...p, ...patch } });
+  const city = cities[lease.city];
   return (
     <>
+      <Field label="City">
+        <Radio
+          name="city"
+          value={lease.city}
+          options={CITIES.map((key) => [key, `${cities[key].name}, ${cities[key].state}`])}
+          onChange={(city) => set({ city })}
+        />
+      </Field>
       <Field label="Street address">
         <Text value={p.street} onChange={(street) => up({ street })} />
       </Field>
@@ -76,7 +33,9 @@ function Property({ lease, set }: Props) {
           <Num value={p.yearBuilt} onChange={(yearBuilt) => up({ yearBuilt })} />
         </Field>
       </div>
-      <p className="hint">City and state are fixed to Philadelphia, Pennsylvania.</p>
+      <p className="hint">
+        {city.name}, {city.state}
+      </p>
       <Field label="Appliances and furnishings included">
         <Text value={p.furnishings} onChange={(furnishings) => up({ furnishings })} />
       </Field>
@@ -121,7 +80,7 @@ function LandlordStep({ lease, set }: Props) {
           <Text type="email" value={L.email} onChange={(email) => up({ email })} />
         </Field>
       </div>
-      <Field label="Philadelphia Rental License number">
+      <Field label={`${cities[lease.city].name} rental license or registration number`}>
         <Text value={L.rentalLicense} onChange={(rentalLicense) => up({ rentalLicense })} />
       </Field>
     </>
@@ -178,17 +137,24 @@ function Term({ lease, set }: Props) {
           <Text type="date" value={t.end} onChange={(end) => up({ end })} />
         </Field>
       </div>
-      <Field label="At the end of the term">
-        <Radio
-          name="endOfTerm"
-          value={t.endOfTerm}
-          options={[
-            ['monthToMonth', 'Lease continues month-to-month'],
-            ['vacate', 'Lease ends and tenant must move out'],
-          ]}
-          onChange={(endOfTerm) => up({ endOfTerm })}
-        />
-      </Field>
+      {cities[lease.city].supportsVacateAtEnd ? (
+        <Field label="At the end of the term">
+          <Radio
+            name="endOfTerm"
+            value={t.endOfTerm}
+            options={[
+              ['monthToMonth', 'Lease continues month-to-month'],
+              ['vacate', 'Lease ends and tenant must move out'],
+            ]}
+            onChange={(endOfTerm) => up({ endOfTerm })}
+          />
+        </Field>
+      ) : (
+        <p className="hint">
+          In {cities[lease.city].name} the lease continues month-to-month after the end date unless it is renewed,
+          and the landlord needs just cause to end it.
+        </p>
+      )}
     </>
   );
 }
@@ -227,13 +193,13 @@ function DepositAndFees({ lease, set }: Props) {
   const upF = (patch: Partial<typeof f>) => set({ fees: { ...f, ...patch } });
   return (
     <>
-      <Field label="Security deposit ($)" hint="Pennsylvania caps deposits at two months of rent in the first year.">
+      <Field label="Security deposit ($)" hint={cities[lease.city].depositHint}>
         <Num value={d.amount} step={0.01} onChange={(amount) => upD({ amount })} />
       </Field>
-      <Field label="Escrow bank name" hint="Pennsylvania requires the deposit to be held in escrow and the bank disclosed.">
+      <Field label="Deposit bank name" hint="The deposit is held in a separate account and the bank is disclosed in the lease.">
         <Text value={d.bankName} onChange={(bankName) => upD({ bankName })} />
       </Field>
-      <Field label="Escrow bank address">
+      <Field label="Deposit bank address">
         <Text value={d.bankAddress} onChange={(bankAddress) => upD({ bankAddress })} />
       </Field>
       <div className="row">
@@ -341,45 +307,6 @@ function Policies({ lease, set }: Props) {
   );
 }
 
-function Philadelphia({ lease, set }: Props) {
-  const p = lease.philadelphia;
-  const up = (patch: Partial<typeof p>) => set({ philadelphia: { ...p, ...patch } });
-  return (
-    <>
-      <Field
-        label="Certificate of Rental Suitability issue date"
-        hint="Pull it from L&I eCLIPSE. It must be issued within 60 days before the lease start date."
-      >
-        <Text type="date" value={p.crsDate} onChange={(crsDate) => up({ crsDate })} />
-      </Field>
-      <Field label="Lead certification">
-        <Radio
-          name="leadCertification"
-          value={p.leadCertification}
-          options={[
-            ['Lead-Safe', 'Lead-Safe certificate'],
-            ['Lead-Free', 'Lead-Free certificate'],
-          ]}
-          onChange={(leadCertification) => up({ leadCertification })}
-        />
-      </Field>
-      <Field label="Lead certificate inspection date" hint="Lead-Safe certificates are valid for 48 months from the inspection. Lead-Free certificates do not expire.">
-        <Text type="date" value={p.leadCertificationDate} onChange={(leadCertificationDate) => up({ leadCertificationDate })} />
-      </Field>
-      <Check
-        checked={p.bedBugsReported}
-        onChange={(bedBugsReported) => up({ bedBugsReported })}
-        label="Bed bug infestation or treatment in the unit during the last 120 days"
-      />
-      {p.bedBugsReported && (
-        <Field label="Bed bug history and remediation">
-          <Area value={p.bedBugDetails} onChange={(bedBugDetails) => up({ bedBugDetails })} />
-        </Field>
-      )}
-    </>
-  );
-}
-
 function Stipulations({ lease, set }: Props) {
   return (
     <Field label="Special stipulations" hint="Separate stipulations with a blank line. Each becomes a numbered term in the lease.">
@@ -414,9 +341,8 @@ function Review({ lease }: Props) {
         </tbody>
       </table>
       <p className="hint">
-        The PDF includes the lease, the disclosures page, the EPA lead pamphlet, the City bed bug notice, and the
-        Partners in Good Housing handbook. Upload it to your signing platform and add the Certificate of Rental
-        Suitability and the lead certificate (with a tenant signature field on the certificate) to the same envelope.
+        The PDF includes the lease, the disclosures page, and the exhibits for {cities[lease.city].name}. Upload it
+        to your signing platform and add the city documents listed in the README to the same envelope.
       </p>
     </>
   );
@@ -440,8 +366,10 @@ export function StepForm({ step, lease, set }: Props & { step: Step }) {
       return <Utilities lease={lease} set={set} />;
     case 'Policies':
       return <Policies lease={lease} set={set} />;
-    case 'Philadelphia':
-      return <Philadelphia lease={lease} set={set} />;
+    case 'Local': {
+      const Local = cities[lease.city].LocalStep;
+      return <Local lease={lease} set={set} />;
+    }
     case 'Stipulations':
       return <Stipulations lease={lease} set={set} />;
     case 'Review':

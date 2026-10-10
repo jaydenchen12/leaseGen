@@ -4,12 +4,12 @@ import puppeteer from 'puppeteer';
 import { PDFDocument } from 'pdf-lib';
 import { Lease, premisesAddress } from '../shared/Lease';
 import type { LeaseInput } from '../shared/types';
+import { cities } from '../shared/cities';
 
 const css = await readFile(new URL('../shared/lease.css', import.meta.url), 'utf8');
-const exhibits = await Promise.all(
-  ['protect-your-family-from-lead.pdf', 'philadelphia-bed-bug-notice.pdf', 'partners-in-good-housing.pdf'].map((name) =>
-    readFile(new URL(`../assets/${name}`, import.meta.url)),
-  ),
+const files = new Set(Object.values(cities).flatMap((city) => city.exhibits.map((e) => e.file)));
+const assets = new Map(
+  await Promise.all([...files].map(async (name) => [name, await readFile(new URL(`../assets/${name}`, import.meta.url))] as const)),
 );
 
 function escapeHtml(s: string): string {
@@ -42,8 +42,8 @@ async function renderLease(input: LeaseInput): Promise<Uint8Array> {
 
 export async function leasePacket(input: LeaseInput): Promise<Uint8Array> {
   const packet = await PDFDocument.load(await renderLease(input));
-  for (const bytes of exhibits) {
-    const exhibit = await PDFDocument.load(bytes);
+  for (const { file } of cities[input.city].exhibits) {
+    const exhibit = await PDFDocument.load(assets.get(file)!);
     for (const page of await packet.copyPages(exhibit, exhibit.getPageIndices())) packet.addPage(page);
   }
   packet.setTitle(`Residential Lease Agreement, ${premisesAddress(input)}`);
