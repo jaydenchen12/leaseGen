@@ -125,3 +125,13 @@
   color: #fff;
   font-size: 6pt;
 }
+.lease table.checklist td {
+  height: 20pt;
+}
+.lease table.checklist th {
+  width: 30%;
+  font-weight: normal;
+}
+.lease table.checklist thead th {
+  font-weight: bold;
+}

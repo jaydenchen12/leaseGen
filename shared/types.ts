@@ -1,4 +1,4 @@
-export const CITIES = ['philadelphia'] as const;
+export const CITIES = ['philadelphia', 'seattle'] as const;
 export type CityKey = (typeof CITIES)[number];
 
 export type Landlord = {
@@ -62,6 +62,18 @@ export type LeaseInput = {
     bedBugsReported: boolean;
     bedBugDetails: string;
   };
+  seattle: {
+    singleFamily: boolean;
+    smokeDetectors: 'hardWired' | 'battery';
+    fireSprinklers: boolean;
+    fireAlarm: boolean;
+    emergencyNotificationPlan: boolean;
+    emergencyRelocationPlan: boolean;
+    emergencyEvacuationPlan: boolean;
+    agentForService: string;
+    leadKnownHazards: string;
+    leadRecords: string;
+  };
   stipulations: string;
 };
 
@@ -103,6 +115,18 @@ export const emptyLease: LeaseInput = {
     leadCertificationDate: '',
     bedBugsReported: false,
     bedBugDetails: '',
+  },
+  seattle: {
+    singleFamily: false,
+    smokeDetectors: 'battery',
+    fireSprinklers: false,
+    fireAlarm: false,
+    emergencyNotificationPlan: false,
+    emergencyRelocationPlan: false,
+    emergencyEvacuationPlan: false,
+    agentForService: '',
+    leadKnownHazards: '',
+    leadRecords: '',
   },
   stipulations: '',
 };

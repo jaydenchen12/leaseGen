@@ -99,7 +99,10 @@ export const philadelphia: City = {
   eSignLaw: 'the Pennsylvania Electronic Transactions Act (73 P.S. § 2260.101 et seq.)',
   county: 'Philadelphia County',
   supportsVacateAtEnd: true,
+  allowsPetRent: true,
+  licenseLabel: 'Philadelphia Rental License number',
   depositHint: 'Pennsylvania caps deposits at two months of rent in the first year.',
+  presets: ({ fees }) => ({ fees: { ...fees, lateFee: 50, dailyLateFee: 0, returnedPaymentFee: 35 } }),
   exhibits: [
     { letter: 'A', title: 'EPA pamphlet "Protect Your Family From Lead in Your Home"', file: 'protect-your-family-from-lead.pdf' },
     { letter: 'B', title: 'City of Philadelphia bed bug informational notice', file: 'philadelphia-bed-bug-notice.pdf' },
@@ -249,6 +252,8 @@ export const philadelphia: City = {
       </ol>
     );
   },
+
+  parking: ({ property }) => <>Parking: {property.parking}.</>,
 
   smokingNote: (input) => (
     <p>

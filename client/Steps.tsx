@@ -16,7 +16,7 @@ function Property({ lease, set }: Props) {
           name="city"
           value={lease.city}
           options={CITIES.map((key) => [key, `${cities[key].name}, ${cities[key].state}`])}
-          onChange={(city) => set({ city })}
+          onChange={(city) => set({ city, ...cities[city].presets(lease) })}
         />
       </Field>
       <Field label="Street address">
@@ -80,7 +80,7 @@ function LandlordStep({ lease, set }: Props) {
           <Text type="email" value={L.email} onChange={(email) => up({ email })} />
         </Field>
       </div>
-      <Field label={`${cities[lease.city].name} rental license or registration number`}>
+      <Field label={cities[lease.city].licenseLabel}>
         <Text value={L.rentalLicense} onChange={(rentalLicense) => up({ rentalLicense })} />
       </Field>
     </>
@@ -268,9 +268,11 @@ function Policies({ lease, set }: Props) {
             <Field label="Pet deposit ($, counts toward the deposit cap)">
               <Num value={p.deposit} step={0.01} onChange={(deposit) => upP({ deposit })} />
             </Field>
-            <Field label="Monthly pet rent ($)">
-              <Num value={p.monthlyRent} step={0.01} onChange={(monthlyRent) => upP({ monthlyRent })} />
-            </Field>
+            {cities[lease.city].allowsPetRent && (
+              <Field label="Monthly pet rent ($)">
+                <Num value={p.monthlyRent} step={0.01} onChange={(monthlyRent) => upP({ monthlyRent })} />
+              </Field>
+            )}
           </div>
         </>
       )}

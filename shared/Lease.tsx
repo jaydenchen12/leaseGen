@@ -156,7 +156,7 @@ export function Lease({ input }: { input: LeaseInput }) {
         </p>
         <ol className="sub">
           <li>Appliances and furnishings included: {P.furnishings}.</li>
-          <li>Parking: {P.parking}.</li>
+          <li>{city.parking(input)}</li>
           <li>
             Keys and access devices: Landlord will give Tenant {P.keys}. Tenant may not duplicate keys, change or add
             locks, or alter any access device without Landlord's written consent, and must return every key and access
@@ -403,6 +403,18 @@ export function Lease({ input }: { input: LeaseInput }) {
         {city.disclosures(input)}
         <Signatures input={input} lead={city.disclosureCertification} />
       </div>
+
+      {city.exhibits.map((exhibit) =>
+        'render' in exhibit ? (
+          <div className="page-break" key={exhibit.letter}>
+            <h1>
+              Exhibit {exhibit.letter}: {exhibit.title}
+            </h1>
+            <p className="subtitle">{address}</p>
+            {exhibit.render(input)}
+          </div>
+        ) : null,
+      )}
     </div>
   );
 }

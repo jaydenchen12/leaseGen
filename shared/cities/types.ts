@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react';
 import type { CityKey, LeaseInput } from '../types';
 
-export type Exhibit = { letter: string; title: string; file: string };
+export type Exhibit = { letter: string; title: string } & ({ file: string } | { render: (input: LeaseInput) => ReactNode });
 
 export type StepProps = { lease: LeaseInput; set: (patch: Partial<LeaseInput>) => void };
 
@@ -14,7 +14,10 @@ export type City = {
   eSignLaw: string;
   county: string;
   supportsVacateAtEnd: boolean;
+  allowsPetRent: boolean;
+  licenseLabel: string;
   depositHint: string;
+  presets: (lease: LeaseInput) => Partial<LeaseInput>;
   exhibits: Exhibit[];
   termSummary: (input: LeaseInput) => string;
   term: (input: LeaseInput) => ReactNode;
@@ -24,6 +27,7 @@ export type City = {
   utilitiesNotes: (input: LeaseInput) => ReactNode;
   occupancy: (input: LeaseInput) => ReactNode;
   smokingNote: (input: LeaseInput) => ReactNode;
+  parking: (input: LeaseInput) => ReactNode;
   condition: ReactNode;
   maintenance: (input: LeaseInput) => ReactNode;
   alarms: ReactNode;

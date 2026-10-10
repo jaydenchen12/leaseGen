@@ -7,7 +7,7 @@ import type { LeaseInput } from '../shared/types';
 import { cities } from '../shared/cities';
 
 const css = await readFile(new URL('../shared/lease.css', import.meta.url), 'utf8');
-const files = new Set(Object.values(cities).flatMap((city) => city.exhibits.map((e) => e.file)));
+const files = new Set(Object.values(cities).flatMap((city) => city.exhibits.flatMap((e) => ('file' in e ? [e.file] : []))));
 const assets = new Map(
   await Promise.all([...files].map(async (name) => [name, await readFile(new URL(`../assets/${name}`, import.meta.url))] as const)),
 );
@@ -42,9 +42,10 @@ async function renderLease(input: LeaseInput): Promise<Uint8Array> {
 
 export async function leasePacket(input: LeaseInput): Promise<Uint8Array> {
   const packet = await PDFDocument.load(await renderLease(input));
-  for (const { file } of cities[input.city].exhibits) {
-    const exhibit = await PDFDocument.load(assets.get(file)!);
-    for (const page of await packet.copyPages(exhibit, exhibit.getPageIndices())) packet.addPage(page);
+  for (const exhibit of cities[input.city].exhibits) {
+    if (!('file' in exhibit)) continue;
+    const pages = await PDFDocument.load(assets.get(exhibit.file)!);
+    for (const page of await packet.copyPages(pages, pages.getPageIndices())) packet.addPage(page);
   }
   packet.setTitle(`Residential Lease Agreement, ${premisesAddress(input)}`);
   return packet.save();

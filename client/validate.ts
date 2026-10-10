@@ -50,7 +50,7 @@ export function validate(step: Step, l: LeaseInput): string[] {
       need(!blank(L.zip), 'Landlord ZIP code is required');
       need(!blank(L.phone), 'Landlord phone is required');
       need(L.email.includes('@'), 'Landlord email is required');
-      need(!blank(L.rentalLicense), `${city.name} rental license or registration number is required`);
+      need(!blank(L.rentalLicense), `${city.licenseLabel} is required`);
       break;
     }
     case 'Tenants':
