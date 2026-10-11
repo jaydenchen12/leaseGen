@@ -1,3 +1,6 @@
+export const CITIES = ['philadelphia', 'seattle'] as const;
+export type CityKey = (typeof CITIES)[number];
+
 export type Landlord = {
   name: string;
   street: string;
@@ -26,9 +29,11 @@ export type Payer = 'landlord' | 'tenant';
 
 export type EndOfTerm = 'monthToMonth' | 'vacate';
 export type Smoking = 'prohibited' | 'outdoorsOnly' | 'allowed';
+export type BuildingSmokingPolicy = 'prohibitedInAllUnits' | 'allowedInAllUnits' | 'allowedInSomeUnits';
 export type LeadCertification = 'Lead-Safe' | 'Lead-Free';
 
 export type LeaseInput = {
+  city: CityKey;
   property: {
     street: string;
     unit: string;
@@ -48,6 +53,7 @@ export type LeaseInput = {
   utilities: Record<Utility, Payer>;
   pets: { allowed: boolean; description: string; deposit: number; monthlyRent: number };
   smoking: Smoking;
+  buildingSmokingPolicy: BuildingSmokingPolicy;
   rentersInsuranceRequired: boolean;
   philadelphia: {
     crsDate: string;
@@ -56,10 +62,23 @@ export type LeaseInput = {
     bedBugsReported: boolean;
     bedBugDetails: string;
   };
+  seattle: {
+    singleFamily: boolean;
+    smokeDetectors: 'hardWired' | 'battery';
+    fireSprinklers: boolean;
+    fireAlarm: boolean;
+    emergencyNotificationPlan: boolean;
+    emergencyRelocationPlan: boolean;
+    emergencyEvacuationPlan: boolean;
+    agentForService: string;
+    leadKnownHazards: string;
+    leadRecords: string;
+  };
   stipulations: string;
 };
 
 export const emptyLease: LeaseInput = {
+  city: 'philadelphia',
   property: {
     street: '',
     unit: '',
@@ -88,6 +107,7 @@ export const emptyLease: LeaseInput = {
   },
   pets: { allowed: false, description: '', deposit: 0, monthlyRent: 0 },
   smoking: 'prohibited',
+  buildingSmokingPolicy: 'prohibitedInAllUnits',
   rentersInsuranceRequired: true,
   philadelphia: {
     crsDate: '',
@@ -95,6 +115,18 @@ export const emptyLease: LeaseInput = {
     leadCertificationDate: '',
     bedBugsReported: false,
     bedBugDetails: '',
+  },
+  seattle: {
+    singleFamily: false,
+    smokeDetectors: 'battery',
+    fireSprinklers: false,
+    fireAlarm: false,
+    emergencyNotificationPlan: false,
+    emergencyRelocationPlan: false,
+    emergencyEvacuationPlan: false,
+    agentForService: '',
+    leadKnownHazards: '',
+    leadRecords: '',
   },
   stipulations: '',
 };

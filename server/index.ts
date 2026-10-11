@@ -20,4 +20,4 @@ app.use(((err, _req, res, _next) => {
   res.status(500).type('text/plain').send(err instanceof Error ? err.message : String(err));
 }) as express.ErrorRequestHandler);
 
-app.listen(port, () => console.log(`Philadelphia Lease Generator: http://localhost:${port}`));
+app.listen(port, () => console.log(`Lease Generator: http://localhost:${port}`));
